@@ -11,4 +11,6 @@
   :depends-on (:gficl)
   :components ((:module "src"
                 :components 
-                ((:file "main")))))
+                ((:file "package")
+		 (:file "main" :depends-on ("post"))
+		 (:file "post")))))

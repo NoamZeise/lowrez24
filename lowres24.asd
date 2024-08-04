@@ -8,9 +8,11 @@
   :build-operation "deploy-op"
   :build-pathname "lowres24"
   :entry-point "lowres24:run"
-  :depends-on (:gficl)
+  :depends-on (:gficl
+	       :cl-wavefront)
   :components ((:module "src"
                 :components 
                 ((:file "package")
-		 (:file "main" :depends-on ("post"))
-		 (:file "post")))))
+		 (:file "main" :depends-on ("post" "offscreen"))
+		 (:file "post")
+		 (:file "offscreen")))))

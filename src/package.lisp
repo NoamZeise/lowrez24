@@ -2,4 +2,5 @@
 
 (defpackage lowres24
 	    (:use :cl)
+	    (:local-nicknames (#:obj #:org.shirakumo.fraf.wavefront))
 	    (:export #:run))

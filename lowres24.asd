@@ -13,8 +13,9 @@
   :components ((:module "src"
                 :components 
                 ((:file "package")
-		 (:file "main" :depends-on ("post" "offscreen" "object" "assets"))
+		 (:file "main" :depends-on ("post" "offscreen" "object" "assets" "path"))
 		 (:file "post")
 		 (:file "offscreen")
 		 (:file "object")
-		 (:file "assets")))))
+		 (:file "assets")
+		 (:file "path")))))

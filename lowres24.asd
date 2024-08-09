@@ -18,4 +18,5 @@
 		 (:file "offscreen")
 		 (:file "object")
 		 (:file "assets")
-		 (:file "path")))))
+		 (:file "path")
+		 (:file "cam")))))

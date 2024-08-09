@@ -16,16 +16,9 @@
       (:f (gficl:toggle-fullscreen))))
     (let ((pos-updated nil))      
       (gficl:map-keys-down
-       ((:w (setf *cam-r* (- *cam-r* (* 10 dt))))
-	(:s (setf *cam-r* (+ *cam-r* (* 10 dt))))
-	(:a (setf *cam-x* (+ *cam-x* dt)))
-	(:d (setf *cam-x* (- *cam-x* dt)))
-	(:q (setf *cam-y* (+ *cam-y* dt)))
-	(:e (setf *cam-y* (- *cam-y* dt)))
-	
-	(:space
+       ((:w
 	 (setf *dist* (+ *dist* (* 10.0 dt))))
-	(:left-shift
+	(:s
 	 (setf *dist* (- *dist* (* 10.0 dt))))
 	
 	(:up (setf pos-updated t)
@@ -37,22 +30,14 @@
 
     (update-path *dist*)
     
-    (multiple-value-bind
-     (pos up forward) (get-pos *dist*)
-     (setf *cam-target* pos)
-     (setf *cam-up* forward)
-     (setf *cam-pos* (calc-cam-pos forward up)))
+    (multiple-value-bind (pos up forward) (get-pos *dist*) (update-cam *cam* dt pos up forward))
     
 ;;    (format t "fps: ~a~%" (/ 1 (float dt)))
   ;;  (format t "dist: ~a~%" *dist*)
     
     (gficl:bind-gl *main-shader*)
-    (let ((pos (gficl:+vec *cam-target* *cam-pos*)))
-      (multiple-value-bind (view up left) (gficl:view-matrix pos (gficl:-vec *cam-pos*) *cam-up*)
-			   (gficl:bind-matrix *main-shader* "view" view)
-			   (gficl:bind-vec *main-shader* "cam_pos" pos)
-			   (setf *local-left* left)
-			   (setf *local-up* up)))))
+    (gficl:bind-matrix *main-shader* "view" (view-matrix *cam*))
+    (gficl:bind-vec *main-shader* "cam_pos" (pos *cam*))))
 
 (defun draw-main ()
   (gficl:with-render
@@ -70,11 +55,6 @@
   (setup-offscreen)
   (setup-post)
   (setup-assets)
-  (setf *cam-target* (gficl:make-vec '(0 0 0)))
-  (setf *cam-up* (gficl:make-vec'(1 0 0)))
-  (setf *cam-pos* (gficl:make-vec'(0 1 0)))
-  (setf *local-up* *cam-up*)
-  (setf *local-left* (gficl:make-vec '(1 0 0)))
 
   (load-model 'fish #p"assets/fish.obj")
   (load-model 'sphere #p"assets/sphere.obj")
@@ -89,9 +69,9 @@
 
   (path-setup)
   (setf *dist* 0)
-  (setf *cam-x* 0)
-  (setf *cam-y* 0)
-  (setf *cam-r* 5)
+  (setf *cam* (make-camera (gficl:make-vec '(0 0 0))
+			   (gficl:make-vec '(0 1 0))
+			   (gficl:make-vec '(1 0 0))))
   
   (gficl:bind-gl *main-shader*)
   (gficl:bind-matrix *main-shader* "projection"
@@ -108,32 +88,13 @@
 	(progn
 	  (update-model *model* (gficl:translation-matrix (pos p)))
 	  (draw *model*)
-	  (update-model *model* (gficl:*mat 
-					    (gficl:translation-matrix (gficl:+vec (pos p) (up p)))
-					    (gficl:scale-matrix '(0.1 0.1 0.1))))
-	  (draw *model*))))
-
-(defun calc-cam-pos (forward-vec up-vec)
-  (let* ((forward (gficl:normalise forward-vec))
-	 (up (gficl:normalise up-vec))
-	 (left (gficl:cross forward up))
-	 (qx (gficl:make-unit-quat *cam-x* left))
-	 (qy (gficl:make-unit-quat *cam-y* forward))
-	 (q (gficl:*quat qy qx)))
-    (gficl:*vec *cam-r* (gficl:quat-conjugate-vec q up))))
+	  ;(update-model *model* (gficl:*mat (gficl:translation-matrix (gficl:+vec (pos p) (up p))) (gficl:scale-matrix '(0.1 0.1 0.1))))
+	  ;(draw *model*)
+	  )))
 
 ;;; ---- Globals ----
 
-(defparameter *cam-up* (gficl:make-vec '(0 1 0)))
-(defparameter *cam-pos* nil)
-(defparameter *cam-target* nil)
-
-(defparameter *cam-x* nil)
-(defparameter *cam-y* nil)
-(defparameter *cam-r* nil)
-
-(defparameter *local-up* nil)
-(defparameter *local-left* nil)
+(defparameter *cam* nil)
 
 (defparameter *model* nil)
 (defparameter *model2* nil)

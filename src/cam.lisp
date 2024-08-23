@@ -1,4 +1,4 @@
-(in-package :lowres24)
+(in-package :coaster)
 
 (defclass camera ()
   ((rot-x :accessor rot-x :type number :initarg :rot-y)
@@ -38,12 +38,12 @@
 
 (defun cam-controls (cam dt)  
   (gficl:map-keys-down
-   ((:a (setf (rot-x cam) (+ (rot-x cam) (* dt 1.0))))
-    (:d (setf (rot-x cam) (+ (rot-x cam) (* dt -1 1.0))))
-    (:space (setf (rot-y cam) (+ (rot-y cam) (* dt 1.0))))
-    (:left-shift (setf (rot-y cam) (+ (rot-y cam) (* dt -1 1.0))))
-    (:equal (setf (radius cam) (+ (radius cam) (* dt 1.0))))
-    (:minus (setf (radius cam) (+ (radius cam) (* dt -1 1.0)))))))
+   (:a (setf (rot-x cam) (+ (rot-x cam) (* dt 1.0))))
+   (:d (setf (rot-x cam) (+ (rot-x cam) (* dt -1 1.0))))
+   (:space (setf (rot-y cam) (+ (rot-y cam) (* dt 1.0))))
+   (:left-shift (setf (rot-y cam) (+ (rot-y cam) (* dt -1 1.0))))
+   (:equal (setf (radius cam) (+ (radius cam) (* dt 1.0))))
+   (:minus (setf (radius cam) (+ (radius cam) (* dt -1 1.0))))))
 
 (defun update-cam (cam dt pos up forward-dir)
   (cam-controls cam dt)

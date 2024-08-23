@@ -3,11 +3,11 @@
 (require 'asdf)
 (in-package :asdf-user)
 
-(defsystem :lowres24
+(defsystem :coaster
   :defsystem-depends-on (:deploy)
   :build-operation "deploy-op"
-  :build-pathname "lowres24"
-  :entry-point "lowres24:run"
+  :build-pathname "coaster"
+  :entry-point "coaster:run"
   :depends-on (:gficl
 	       :cl-wavefront)
   :components ((:module "src"

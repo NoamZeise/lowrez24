@@ -1,16 +1,19 @@
 LISP="sbcl"
+
 build: ql copy
+
+build-asdf: asdf copy
 
 ql:
 	$(LISP) --eval "(ql:quickload :deploy)" \
-		--load "lowres24.asd" \
-                --eval "(ql:quickload :lowres24)" \
-                --eval "(asdf:make :lowres24)"
+		--load "coaster.asd" \
+                --eval "(ql:quickload :coaster)" \
+                --eval "(asdf:make :coaster)"
 
 asdf: # build without quicklisp 
-	$(LISP) --load "lowres24.asd" \
-                --eval "(asdf:load-system :lowres24)" \
-                --eval "(asdf:make :gficl-examples)"
+	$(LISP) --load "coaster.asd" \
+                --eval "(asdf:load-system :coaster)" \
+                --eval "(asdf:make :coaster)"
 
 copy:
 	cp -r assets/ bin/

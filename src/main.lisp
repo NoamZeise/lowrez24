@@ -1,8 +1,8 @@
-(in-package :lowres24)
+(in-package :coaster)
 
 (defun run ()
   (gficl:with-window
-   (:title "lowres24" :width 640 :height 640 :resize-callback #'resize)
+   (:title "coaster" :width 640 :height 640 :resize-callback #'resize)
    (setup)
    (loop until (gficl:closed-p)
 	 do (update)
@@ -12,19 +12,19 @@
 (defun update ()
   (gficl:with-update (dt)		     
     (gficl:map-keys-pressed
-     ((:escape (glfw:set-window-should-close))
-      (:f (gficl:toggle-fullscreen))))
+     (:escape (glfw:set-window-should-close))
+     (:f (gficl:toggle-fullscreen)))
     (let ((pos-updated nil))      
       (gficl:map-keys-down
-       ((:w
-	 (setf *dist* (+ *dist* (* 10.0 dt))))
-	(:s
-	 (setf *dist* (- *dist* (* 10.0 dt))))
+       (:w
+	(setf *dist* (+ *dist* (* 10.0 dt))))
+       (:s
+	(setf *dist* (- *dist* (* 10.0 dt))))
 	
-	(:up (setf pos-updated t)
-	     (setf *pos* (gficl:+vec *pos* (list 0 (* dt 10.0) 0))))
-	(:down (setf pos-updated t)
-	       (setf *pos* (gficl:+vec *pos* (list 0 (* dt -10.0) 0))))))
+       (:up (setf pos-updated t)
+	    (setf *pos* (gficl:+vec *pos* (list 0 (* dt 10.0) 0))))
+       (:down (setf pos-updated t)
+	      (setf *pos* (gficl:+vec *pos* (list 0 (* dt -10.0) 0)))))
       (if pos-updated
 	  (update-model *model2* (gficl:*mat (gficl:translation-matrix *pos*)))))
 

@@ -1,4 +1,4 @@
-(in-package :lowres24)
+(in-package :coaster)
 
 (defun setup-assets ()
   (setf *assets* (make-hash-table)))

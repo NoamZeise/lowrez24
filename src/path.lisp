@@ -1,4 +1,4 @@
-(in-package :lowres24)
+(in-package :coaster)
 
 (defclass point ()
   ((pos :accessor pos :initarg :pos :type gficl:vec)

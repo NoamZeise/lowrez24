@@ -1,4 +1,4 @@
-(in-package :lowres24)
+(in-package :coaster)
 
 (defun setup-post ()
   (setf *post-shader*

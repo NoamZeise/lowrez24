@@ -29,7 +29,7 @@
    (loop for a in (obj:attributes mesh) collecting
 	 (ecase a (:position (gficl:make-vertex-slot 3 :float))
 		(:normal (gficl:make-vertex-slot 3 :float))
-		(:uv (gficl:make-vertex-slot 2 :float))))))
+		(:uv (gficl:make-vertex-slot 2 :float))))))		
 
 ;;; ---- Globals ----
 

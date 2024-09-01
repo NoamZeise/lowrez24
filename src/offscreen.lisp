@@ -6,14 +6,14 @@
     (if (> (setf samples (min 32 (gl:get-integer :max-samples))) 1)
 	(setf *offscreen-resolve-fb*
 	      (gficl:make-framebuffer
-	       (list (gficl:make-attachment-description :color-attachment0 :texture))
+	       (list (gficl:make-attachment-description :color-attachment0 :type :texture))
 	       *target-width* *target-height*)))
     (setf *offscreen-fb*
 	  (gficl:make-framebuffer
 	   (list (gficl:make-attachment-description
-		  :color-attachment0 (if *offscreen-resolve-fb* :renderbuffer :texture))
+		  :color-attachment0 :type (if *offscreen-resolve-fb* :renderbuffer :texture))
 		 (gficl:make-attachment-description :depth-stencil-attachment))
-	   *target-width* *target-height* samples)))
+	   *target-width* *target-height* :samples samples)))
   (setf *main-shader* (gficl:make-shader
 		       (alexandria:read-file-into-string #p"shaders/main.vert")
 		       (alexandria:read-file-into-string #p"shaders/main.frag"))))

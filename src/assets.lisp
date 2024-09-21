@@ -13,23 +13,10 @@
   (setf (gethash key *assets*) vertex-data))
 
 (defun load-model (key filename)
-  (let ((meshes (obj:extract-meshes (obj:parse (probe-file filename)))))
-    (add-asset
-     key (loop for mesh in meshes collecting
-	       (gficl:make-vertex-data-from-vectors
-		(get-vertex-form mesh) (obj:vertex-data mesh) (obj:index-data mesh))))))
+  (add-asset key (gficl/load:model filename :vertex-form '(:position :normal))))
 
 (defun get-asset (key)
   (gethash key *assets*))
-
-;;; ---- Helpers ----
-
-(defun get-vertex-form (mesh)
-  (gficl:make-vertex-form
-   (loop for a in (obj:attributes mesh) collecting
-	 (ecase a (:position (gficl:make-vertex-slot 3 :float))
-		(:normal (gficl:make-vertex-slot 3 :float))
-		(:uv (gficl:make-vertex-slot 2 :float))))))		
 
 ;;; ---- Globals ----
 

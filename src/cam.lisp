@@ -20,21 +20,15 @@
 		 :forward forward :ideal-forward forward
 		 :rot-x 0 :rot-y 0))
 
-(defun update-cam-ideal (cam pos up forward-dir)
-  (let ((relative-pos (relative-cam-pos cam forward-dir up)))
-    (setf (ideal-pos cam) (gficl:+vec relative-pos pos))
-    (setf (ideal-forward cam) (gficl:+vec (gficl:*vec 2 forward-dir) (gficl:-vec relative-pos)))
-    (setf (ideal-up cam) forward-dir)))
+;;; ---- Interface ----
 
-(defun cam-interp (dt current ideal)
-  (let ((s (min (* dt 3.4) 1)))
-    (gficl:+vec (gficl:*vec (- 1 s) current) (gficl:*vec s ideal))))
+(defun update-cam (cam dt pos up forward-dir)
+  (cam-controls cam dt)
+  (setf (target cam) pos)
+  (update-cam-ideal cam pos up forward-dir)
+  (update-cam-current cam dt))
 
-(defun update-cam-current (cam dt)
-  (setf (pos cam) (cam-interp dt (pos cam) (ideal-pos cam)))
-  (setf (up cam) (cam-interp dt (up cam) (ideal-up cam)))
-  (setf (forward cam) (cam-interp dt (forward cam) (ideal-forward cam)))
-  (setf (view-matrix cam) (gficl:view-matrix (pos cam) (forward cam) (up cam))))
+;;; ---- Helpers -----
 
 (defun cam-controls (cam dt)  
   (gficl:map-keys-down
@@ -45,11 +39,12 @@
    (:equal (setf (radius cam) (+ (radius cam) (* dt 1.0))))
    (:minus (setf (radius cam) (+ (radius cam) (* dt -1 1.0))))))
 
-(defun update-cam (cam dt pos up forward-dir)
-  (cam-controls cam dt)
-  (setf (target cam) pos)
-  (update-cam-ideal cam pos up forward-dir)
-  (update-cam-current cam dt))
+(defun update-cam-ideal (cam pos up forward-dir)
+  "Update where the camera should currently be."
+  (let ((relative-pos (relative-cam-pos cam forward-dir up)))
+    (setf (ideal-pos cam) (gficl:+vec relative-pos pos))
+    (setf (ideal-forward cam) (gficl:+vec (gficl:*vec 2 forward-dir) (gficl:-vec relative-pos)))
+    (setf (ideal-up cam) forward-dir)))
 
 (defun relative-cam-pos (cam forward-vec up-vec)
   (let* ((forward (gficl:normalise forward-vec))
@@ -59,3 +54,15 @@
 	 (qy (gficl:make-unit-quat (rot-y cam) left))	 
 	 (q (gficl:*quat qx qy)))
     (gficl:*vec (radius cam) (gficl:quat-conjugate-vec q up))))
+
+(defun update-cam-current (cam dt)
+  "Update where the cam physically is. Interpolate between current and ideal.
+So camera smoothly approaches it's ideal position."
+  (setf (pos cam) (cam-interp dt (pos cam) (ideal-pos cam)))
+  (setf (up cam) (cam-interp dt (up cam) (ideal-up cam)))
+  (setf (forward cam) (cam-interp dt (forward cam) (ideal-forward cam)))
+  (setf (view-matrix cam) (gficl:view-matrix (pos cam) (forward cam) (up cam))))
+
+(defun cam-interp (dt current ideal)
+  (let ((s (min (* dt 3.4) 1)))
+    (gficl:+vec (gficl:*vec (- 1 s) current) (gficl:*vec s ideal))))

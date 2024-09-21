@@ -9,7 +9,7 @@
   :build-pathname "coaster"
   :entry-point "coaster:run"
   :depends-on (:gficl
-	       :cl-wavefront)
+	       :gficl/load)
   :components ((:module "src"
                 :components 
                 ((:file "package")

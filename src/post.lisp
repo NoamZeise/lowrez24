@@ -1,5 +1,10 @@
 (in-package :coaster)
 
+;;; ---- Post Processing Render Pass ----
+
+(defparameter *post-shader* nil)
+(defparameter *dummy-data* nil)
+
 (defun setup-post ()
   (setf *post-shader*
 	(gficl:make-shader
@@ -32,8 +37,3 @@
   (gl:bind-texture :texture-2d screen-texture-id)
   (gficl:bind-gl *dummy-data*)
   (gl:draw-arrays :triangles 0 3))
-
-;;; ---- Globals ----
-
-(defparameter *post-shader* nil)
-(defparameter *dummy-data* nil)

@@ -4,7 +4,7 @@
   (gficl:with-window
    (:title "coaster" :width 640 :height 640 :resize-callback #'resize)
    (setup)
-   (loop until (gficl:closed-p)
+   (loop until (gficl:closedp)
 	 do (update)
 	 do (draw-main))
    (cleanup)))
@@ -88,8 +88,11 @@
 	(progn
 	  (update-model *model* (gficl:translation-matrix (pos p)))
 	  (draw *model*)
-	  ;(update-model *model* (gficl:*mat (gficl:translation-matrix (gficl:+vec (pos p) (up p))) (gficl:scale-matrix '(0.1 0.1 0.1))))
-	  ;(draw *model*)
+
+	  ;; for debug: display model up vec 
+	  ;;(update-model *model* (gficl:*mat (gficl:translation-matrix (gficl:+vec (pos p) (up p))) (gficl:scale-matrix '(0.1 0.1 0.1))))
+	  ;;(draw *model*)
+	  
 	  )))
 
 ;;; ---- Globals ----

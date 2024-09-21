@@ -1,5 +1,16 @@
 (in-package :coaster)
 
+;;; ---- Globals ----
+
+(defconstant +diff-size+ 1.5)
+(defconstant +path-size+ 100)
+(defparameter *path* nil)
+(defparameter *path-offset* nil)
+(defparameter *path-start* nil)
+(defparameter *path-end* nil)
+
+;;; ---- Point ----
+
 (defclass point ()
   ((pos :accessor pos :initarg :pos :type gficl:vec)
    (up :accessor up :initarg :up :type (gficl:vec))))
@@ -13,6 +24,8 @@
   (let ((pos (gficl:+vec (pos prev-point) diff-vec))
 	(up (gficl:normalise (gficl:cross (gficl:cross diff-vec (up prev-point)) diff-vec))))
     (make-instance 'point :pos pos :up up)))
+
+;;; ---- Path ----
 
 (defun path-setup ()
   (setf *path-start* 0)
@@ -121,12 +134,3 @@
 	      (if (= i *path-start*) (format t " <- start"))
 	      (if (= i *path-end*) (format t " <- end"))
 	      (format t "~%")))))
-
-;;; ---- Globals ----
-
-(defconstant +diff-size+ 1.5)
-(defconstant +path-size+ 100)
-(defparameter *path* nil)
-(defparameter *path-offset* nil)
-(defparameter *path-start* nil)
-(defparameter *path-end* nil)

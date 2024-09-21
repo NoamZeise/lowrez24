@@ -1,5 +1,23 @@
 (in-package :coaster)
 
+;;; ---- Offscreen Render Pass ----
+
+;;; ---- Globals ----
+
+(defparameter *vert-form*
+	      (gficl:make-vertex-form (list (gficl:make-vertex-slot 3 :float)
+					    (gficl:make-vertex-slot 3 :float)
+					    (gficl:make-vertex-slot 2 :float))))
+(defparameter *main-shader* nil)
+
+(defparameter *target-width* 64)
+(defparameter *target-height* 64)
+
+(defparameter *offscreen-fb* nil)
+(defparameter *offscreen-resolve-fb* nil)
+
+;;; ---- Interface ----
+
 (defun setup-offscreen ()
   (setf *offscreen-resolve-fb* nil)
   (let ((samples 0))
@@ -43,17 +61,3 @@
   (if *offscreen-resolve-fb*
       (gficl:blit-framebuffers *offscreen-fb* *offscreen-resolve-fb*
 			       *target-width* *target-height*)))
-
-;;; ---- Globals ----
-
-(defparameter *vert-form*
-	      (gficl:make-vertex-form (list (gficl:make-vertex-slot 3 :float)
-					    (gficl:make-vertex-slot 3 :float)
-					    (gficl:make-vertex-slot 2 :float))))
-(defparameter *main-shader* nil)
-
-(defparameter *target-width* 64)
-(defparameter *target-height* 64)
-
-(defparameter *offscreen-fb* nil)
-(defparameter *offscreen-resolve-fb* nil)

@@ -19,4 +19,5 @@
 		 (:file "object")
 		 (:file "assets")
 		 (:file "path")
-		 (:file "cam")))))
+		 (:file "cam")
+		 (:file "player")))))

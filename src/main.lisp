@@ -15,12 +15,7 @@
      (:escape (glfw:set-window-should-close))
      (:f (gficl:toggle-fullscreen)))
     (let ((pos-updated nil))      
-      (gficl:map-keys-down
-       (:w
-	(setf *dist* (+ *dist* (* 10.0 dt))))
-       (:s
-	(setf *dist* (- *dist* (* 10.0 dt))))
-	
+      (gficl:map-keys-down    	
        (:up (setf pos-updated t)
 	    (setf *pos* (gficl:+vec *pos* (list 0 (* dt 10.0) 0))))
        (:down (setf pos-updated t)
@@ -28,12 +23,14 @@
       (if pos-updated
 	  (update-model *model2* (gficl:*mat (gficl:translation-matrix *pos*)))))
 
-    (update-path *dist*)
+    (update-player dt)
+    (update-path (player-pos))
     
-    (multiple-value-bind (pos up forward) (get-pos *dist*) (update-cam *cam* dt pos up forward))
+    (multiple-value-bind (pos up forward) (get-pos (player-pos))
+			 (update-cam *cam* dt pos up forward))
     
 ;;    (format t "fps: ~a~%" (/ 1 (float dt)))
-  ;;  (format t "dist: ~a~%" *dist*)
+  ;;  (format t "dist: ~a~%" (player-pos))
     
     (gficl:bind-gl *main-shader*)
     (gficl:bind-matrix *main-shader* "view" (view-matrix *cam*))
@@ -68,7 +65,7 @@
 			  (gficl:translation-matrix *pos*)))
 
   (path-setup)
-  (setf *dist* 0)
+  (player-setup)
   (setf *cam* (make-camera (gficl:make-vec '(0 0 0))
 			   (gficl:make-vec '(0 1 0))
 			   (gficl:make-vec '(1 0 0))))
@@ -103,5 +100,3 @@
 (defparameter *model2* nil)
 
 (defparameter *pos* nil)
-
-(defparameter *dist* nil)

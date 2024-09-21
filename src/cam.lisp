@@ -63,6 +63,7 @@ So camera smoothly approaches it's ideal position."
   (setf (forward cam) (cam-interp dt (forward cam) (ideal-forward cam)))
   (setf (view-matrix cam) (gficl:view-matrix (pos cam) (forward cam) (up cam))))
 
-(defun cam-interp (dt current ideal)
-  (let ((s (min (* dt 3.4) 1)))
-    (gficl:+vec (gficl:*vec (- 1 s) current) (gficl:*vec s ideal))))
+(defun cam-interp (dt current ideal)  
+  (let ((s (min 1 (* dt 3.4))))
+    (gficl:+vec (gficl:*vec (- 1 s) current)
+		(gficl:*vec s ideal))))
